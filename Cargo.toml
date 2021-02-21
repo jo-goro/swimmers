@@ -1,0 +1,12 @@
+[package]
+name = "swimmers"
+version = "0.0.0-wip"
+authors = ["Jonas Goronczy <goronczy.jonas@gmail.com>"]
+edition = "2018"
+license = "MIT"
+
+[dependencies]
+crossbeam-utils = "0.8.1"
+rand = { version = "0.8.2", features = ["small_rng"] }
+thiserror = "1.0.23"
+tokio = { version = "1.1.0", features = ["full"] }

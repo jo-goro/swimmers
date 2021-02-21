@@ -1,0 +1,2 @@
+hard_tabs = true
+# add `imports_granularity = "Module"` once rustfmt hits v1.4.33 on stable
