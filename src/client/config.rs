@@ -1,6 +1,6 @@
 use std::net::SocketAddr;
 use std::num::{NonZeroU32, NonZeroUsize};
-use std::ops::Range;
+use std::ops::{Range, RangeBounds};
 use std::time::Duration;
 
 use tokio::runtime::Runtime;
@@ -23,18 +23,6 @@ pub struct JoinConfig {
 
 #[derive(Debug, Clone)]
 pub struct SyncConfig {
-	pub scheduler: SyncSchedulerConfig,
-	pub connection: SyncConnectionConfig,
-}
-
-#[derive(Debug, Clone)]
-pub struct SyncSchedulerConfig {
-	pub base_interval: Duration,
-	pub scale: NonZeroU32,
-}
-
-#[derive(Debug, Clone)]
-pub struct SyncConnectionConfig {
 	pub connect_timeout: Duration,
 	pub read_timeout: Duration,
 	pub write_timeout: Duration,
@@ -54,20 +42,15 @@ pub struct SuspicionConfig {
 
 #[derive(Debug, Clone)]
 pub struct PingConfig {
-	pub scheduler: PingSchedulerConfig,
 	pub indirect_checks: Option<NonZeroUsize>,
 }
 
 #[derive(Debug, Clone)]
-pub struct PingSchedulerConfig {
-	pub base_interval: Duration,
-	pub base_timeout: Duration,
-}
-
-#[derive(Debug, Clone)]
-pub struct GossipConfig {
-	pub base_interval: Duration,
-	pub node_range: Range<usize>,
+pub struct GossipConfig<R>
+where
+	R: RangeBounds<usize>,
+{
+	pub node_range: R,
 }
 
 #[derive(Debug, Clone)]
@@ -104,18 +87,40 @@ pub struct ReclaimConfig {
 }
 
 #[derive(Debug, Clone)]
-pub struct Config<'a, E>
+pub struct SchedulerConfig {
+	pub ping: PingSchedulerConfig,
+	pub sync: SyncSchedulerConfig,
+	pub base_gossip_interval: Duration,
+	pub suspicion: SuspicionConfig,
+	pub reclaim: ReclaimConfig,
+}
+
+#[derive(Debug, Clone)]
+pub struct SyncSchedulerConfig {
+	pub base_interval: Duration,
+	pub scale: NonZeroU32,
+}
+
+#[derive(Debug, Clone)]
+pub struct PingSchedulerConfig {
+	pub base_interval: Duration,
+	pub base_timeout: Duration,
+}
+
+#[derive(Debug, Clone)]
+pub struct Config<'a, E, R>
 where
 	E: EventHandler,
+	R: RangeBounds<usize>,
 {
 	pub runtime: Option<&'a Runtime>,
 	pub event_handler: E,
 	pub awareness: AwarenessConfig,
 	pub join: JoinConfig,
 	pub broadcast: BroadcastConfig,
-	pub suspicion: SuspicionConfig,
-	pub gossip: GossipConfig,
+	pub sync: SyncConfig,
+	pub ping: PingConfig,
+	pub gossip: GossipConfig<R>,
 	pub node: NodeConfig,
 	pub io: IOConfig,
-	pub reclaim: ReclaimConfig,
 }

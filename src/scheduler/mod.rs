@@ -15,7 +15,9 @@ pub(crate) use interval::IntervalNotifier;
 pub(crate) use suspicion::KillRequest;
 
 use crate::consts::MAX_NON_ZERO_U32;
-use crate::{GossipConfig, PingSchedulerConfig, SuspicionConfig, SyncSchedulerConfig};
+use crate::{
+	GossipConfig, PingSchedulerConfig, SchedulerConfig, SuspicionConfig, SyncSchedulerConfig,
+};
 
 pub(crate) struct SchedulerEvents {
 	sync_notifier: IntervalNotifier,
@@ -57,26 +59,22 @@ pub(crate) struct Scheduler {
 }
 
 impl Scheduler {
-	fn new(
-		sync: SyncSchedulerConfig,
-		ping: PingSchedulerConfig,
-		gossip: GossipConfig,
-		suspicion: SuspicionConfig,
-		node_count: NonZeroUsize,
-	) -> (SchedulerEvents, Self) {
-		let (sync_notifier, sync_interval) = SyncInterval::new(sync.base_interval, sync.scale);
-		let (ping_notifier, ping_interval) = AwarenessInterval::new(ping.base_interval);
-		let (gossip_notifier, gossip_interval) = AwarenessInterval::new(gossip.base_interval);
+	fn new(config: SchedulerConfig, node_count: NonZeroUsize) -> (SchedulerEvents, Self) {
+		let (sync_notifier, sync_interval) =
+			SyncInterval::new(config.sync.base_interval, config.sync.scale);
+		let (ping_notifier, ping_interval) = AwarenessInterval::new(config.ping.base_interval);
+		let (gossip_notifier, gossip_interval) =
+			AwarenessInterval::new(config.base_gossip_interval);
 
-		let tc = TimeoutCalculator::from(suspicion);
+		let tc = TimeoutCalculator::from(config.suspicion);
 		let state = State {
-			ping_interval: ping.base_interval,
+			ping_interval: config.ping.base_interval,
 			node_count: node_count.try_into().unwrap_or(MAX_NON_ZERO_U32),
 		};
 
 		let (suspicion_timeout, suspicion_timers) =
-			SuspicionTimers::new(ping.base_interval, tc, state);
-		let (ping_timeout, ping_timers) = PingTimers::new(ping.base_timeout);
+			SuspicionTimers::new(config.ping.base_interval, tc, state);
+		let (ping_timeout, ping_timers) = PingTimers::new(config.ping.base_timeout);
 
 		let e = SchedulerEvents {
 			sync_notifier,
