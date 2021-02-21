@@ -336,9 +336,10 @@ mod tests {
 
 			let r = match r {
 				InsertionResult::Unchanged => 0,
-				InsertionResult::Equal(_) => 1,
-				InsertionResult::Updated(_) => 2,
-				InsertionResult::Inserted(_) => 3,
+				InsertionResult::Equal(n) if n.state.incarnation().unwrap() == i => 1,
+				InsertionResult::Updated(n) if n.state.incarnation().unwrap() == i => 2,
+				InsertionResult::Inserted(n) if n.state.incarnation().unwrap() == i => 3,
+				_ => 100,
 			};
 
 			assert_eq!(r, result);
