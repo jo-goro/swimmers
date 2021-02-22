@@ -1,10 +1,9 @@
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
-use std::time::Instant;
 
 use tokio::sync::mpsc::Sender;
-use tokio::time::sleep;
+use tokio::time::{sleep, Instant};
 
 use crate::handle::Handle;
 

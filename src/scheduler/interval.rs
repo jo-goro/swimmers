@@ -2,11 +2,10 @@ use std::num::NonZeroU32;
 use std::time::Duration;
 
 use std::sync::Arc;
-use std::time::Instant;
 
 use crossbeam_utils::atomic::AtomicCell;
 use tokio::sync::Notify;
-use tokio::time::sleep;
+use tokio::time::{sleep, Instant};
 
 use crate::handle::Handle;
 
