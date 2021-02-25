@@ -30,11 +30,11 @@ impl SuspicionResult {
 }
 
 #[derive(Debug, Default)]
-pub(crate) struct Suspecions {
+pub(crate) struct Suspicions {
 	suspicions: HashMap<SocketAddr, Suspicion>,
 }
 
-impl Suspecions {
+impl Suspicions {
 	pub(crate) fn new() -> Self {
 		Self::default()
 	}
@@ -106,7 +106,7 @@ mod tests {
 			format!("127.0.0.1:{}", port).parse().unwrap()
 		}
 
-		let mut s = Suspecions::new();
+		let mut s = Suspicions::new();
 
 		let result = s.suspect(addr(1), 1, addr(1)).unwrap();
 		assert!(matches!(result, SuspicionResult::New));

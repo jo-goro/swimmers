@@ -15,9 +15,7 @@ pub(crate) use interval::IntervalNotifier;
 pub(crate) use suspicion::KillRequest;
 
 use crate::consts::MAX_NON_ZERO_U32;
-use crate::{
-	GossipConfig, PingSchedulerConfig, SchedulerConfig, SuspicionConfig, SyncSchedulerConfig,
-};
+use crate::SchedulerConfig;
 
 pub(crate) struct SchedulerEvents {
 	sync_notifier: IntervalNotifier,

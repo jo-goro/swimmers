@@ -1,6 +1,5 @@
 use std::convert::TryInto;
 use std::num::NonZeroU32;
-use std::sync::atomic::AtomicU32;
 
 /// A local health awareness component which assumes values in the range of `[1, max]`.
 /// The counter always starts at `1`.

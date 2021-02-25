@@ -1,6 +1,6 @@
 use std::net::SocketAddr;
 use std::num::{NonZeroU32, NonZeroUsize};
-use std::ops::{Range, RangeBounds};
+use std::ops::RangeBounds;
 use std::time::Duration;
 
 use tokio::runtime::Runtime;
