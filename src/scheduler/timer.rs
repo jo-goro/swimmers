@@ -69,6 +69,10 @@ impl Timer {
 
 		self.handle = Handle::from(handle);
 	}
+
+	pub(super) fn stop(&self) {
+		self.handle.inner.abort();
+	}
 }
 
 async fn task<T>(d: Duration, done: Arc<AtomicBool>, out: Output<T>)
