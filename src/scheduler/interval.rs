@@ -45,7 +45,7 @@ impl Interval {
 	}
 
 	fn reset(&mut self, d: Duration) {
-		self.handle.inner.abort();
+		self.handle.abort();
 
 		let handle = tokio::spawn(task(d, self.last_started.clone(), self.notifier.clone()));
 

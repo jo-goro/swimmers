@@ -3,7 +3,14 @@ use tokio::task::JoinHandle;
 /// Wrapper around a [JoinHandle] which aborts the handle when dropped.
 #[derive(Debug)]
 pub(crate) struct Handle {
-	pub(crate) inner: JoinHandle<()>,
+	inner: JoinHandle<()>,
+}
+
+impl Handle {
+	#[inline]
+	pub(crate) fn abort(&self) {
+		self.inner.abort();
+	}
 }
 
 impl From<JoinHandle<()>> for Handle {

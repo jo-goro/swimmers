@@ -52,7 +52,7 @@ impl Timer {
 			return;
 		}
 
-		self.handle.inner.abort();
+		self.handle.abort();
 
 		self.done.store(false, Ordering::Release);
 
@@ -71,7 +71,7 @@ impl Timer {
 	}
 
 	pub(super) fn stop(&self) {
-		self.handle.inner.abort();
+		self.handle.abort();
 	}
 }
 
