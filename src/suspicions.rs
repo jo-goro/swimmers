@@ -71,7 +71,9 @@ impl Suspicions {
 						SuspicionResult::Reset
 					}
 					Ordering::Equal => {
-						suspicion.suspectors.insert(suspector);
+						if !suspicion.suspectors.insert(suspector) {
+							return None;
+						}
 
 						let count = suspicion.suspectors.len();
 						let count = NonZeroUsize::new(count).unwrap();
@@ -115,6 +117,9 @@ mod tests {
 		let result = s.suspect(addr(1), 1, addr(2)).unwrap();
 		assert!(matches!(result, SuspicionResult::Update(i) if i.get() == 2));
 		assert!(s.get(&addr(1)).is_some());
+
+		let result = s.suspect(addr(1), 1, addr(2));
+		assert!(result.is_none());
 
 		let result = s.suspect(addr(1), 0, addr(2));
 		assert!(result.is_none());
