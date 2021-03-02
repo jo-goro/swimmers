@@ -117,6 +117,15 @@ impl NodeState {
 			*self = Alive(i + 1);
 		}
 	}
+
+	/// Sets the state to [Alive] and with the given incarnation number or the
+	/// current incarnation number plus 1 (whichever is higher).
+	/// Does nothing if [Left].
+	pub(crate) fn reincarnate_at(&mut self, incarnation: u64) {
+		if let Some(i) = self.incarnation() {
+			*self = Alive(u64::max(i + 1, incarnation));
+		}
+	}
 }
 
 impl Ord for NodeState {
