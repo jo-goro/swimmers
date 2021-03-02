@@ -2,7 +2,7 @@ use std::borrow::Borrow;
 use std::cmp::Ordering;
 use std::collections::hash_map::Entry;
 use std::collections::{HashMap, HashSet};
-use std::mem::swap;
+use std::mem::replace;
 use std::net::SocketAddr;
 
 use rand::rngs::SmallRng;
@@ -45,16 +45,12 @@ where
 			}
 
 			if self.visited.insert(addr) {
-				let mut next_item = Some(addr);
-				swap(&mut next_item, &mut self.next_item);
-				return next_item;
+				return replace(&mut self.next_item, Some(addr));
 			}
 
 			// return last addr in `self.next_item` and `None` after that once every addr has been visited.
 			if self.visited.len() == self.active_nodes {
-				let mut next_item = None;
-				swap(&mut next_item, &mut self.next_item);
-				return next_item;
+				return replace(&mut self.next_item, None);
 			}
 		}
 	}
